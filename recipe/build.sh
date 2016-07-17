@@ -1,6 +1,13 @@
 #!/bin/bash
 
-./configure --prefix=$PREFIX --with-xft
+export LDFLAGS="${LDFLAGS} -L${PREFIX}/lib"
+export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
+
+./configure --prefix=$PREFIX \
+            --with-xft \
+            --with-cairo=$PREFIX \
+            --with-harfbuzz=$PREFIX
+
 make
 # # FIXME: There is one failure:
 # ========================================
@@ -25,5 +32,3 @@ make
 # FAIL test-layout (exit status: 133)
 # make check
 make install
-
-rm -rf $PREFIX/lib/*.la

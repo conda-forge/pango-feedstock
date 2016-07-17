@@ -13,16 +13,16 @@ source:
 
 build:
     number: 0
-    skip: True  # [win or osx]
+    skip: True  # [win]
     detect_binary_files_with_prefix: true
 
 requirements:
     build:
         - perl
+        - pkg-config
         - harfbuzz
         # FIXME: harfbuzz install everything that pango needs, but to avoid issues
-        # with defaults we need to pin against conda-forge versions until
-        # conda-forge packages harfbuzz.
+        # with defaults we need to pin against conda-forge versions.
         - fontconfig 2.11.*
         - freetype 2.6.*
         - libpng >=1.6.21,<1.7
@@ -34,12 +34,14 @@ requirements:
 test:
     commands:
         - pango-view --help
+        - conda inspect linkages -n _test pango  # [not win]
+        - conda inspect objects -n _test pango  # [osx]
 
 about:
     home: http://www.pango.org/
     license: LGPL-2.1
     license_file: COPYING
-    summary: Text layout and rendering engine
+    summary: 'Text layout and rendering engine.'
     description: |
         Pango is a library for laying out and rendering of text, with an emphasis
         on internationalization. Pango can be used anywhere that text layout is
