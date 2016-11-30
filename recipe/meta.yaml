@@ -12,7 +12,7 @@ source:
     sha256: e27af54172c72b3ac6be53c9a4c67053e16c905e02addcf3a603ceb2005c1a40
 
 build:
-    number: 0
+    number: 1
     skip: True  # [win]
     detect_binary_files_with_prefix: true
 
@@ -25,12 +25,12 @@ requirements:
         # with defaults we need to pin against conda-forge versions.
         - fontconfig 2.11.*
         - freetype 2.6.*
-        - libpng >=1.6.21,<1.7
+        - libpng >=1.6.23,<1.7
     run:
         - harfbuzz
         - fontconfig 2.11.*
         - freetype 2.6.*
-        - libpng >=1.6.21,<1.7
+        - libpng >=1.6.23,<1.7
 test:
     commands:
         - pango-view --help
