@@ -5,8 +5,7 @@ export CPPFLAGS="${CPPFLAGS} -I${PREFIX}/include"
 
 ./configure --prefix=$PREFIX \
             --with-xft \
-            --with-cairo=$PREFIX \
-            --with-harfbuzz=$PREFIX
+            --with-cairo=$PREFIX
 
 make
 # # FIXME: There is one failure:
