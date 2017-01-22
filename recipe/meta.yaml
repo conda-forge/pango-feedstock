@@ -12,7 +12,7 @@ source:
   sha256: abba8b5ce728520c3a0f1535eab19eac3c14aeef7faa5aded90017ceac2711d3
 
 build:
-  number: 1
+  number: 2
   skip: True  # [win]
   detect_binary_files_with_prefix: true
 
@@ -25,6 +25,8 @@ requirements:
     # with defaults we need to pin against conda-forge versions.
     - fontconfig 2.12.*
     - freetype 2.7.*
+    - gobject-introspection  # [not win]
+    - python >=2.7,<3  # [not win]
     - libpng >=1.6.23,<1.7
   run:
     - harfbuzz 1.3.*
