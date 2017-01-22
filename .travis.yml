@@ -4,12 +4,14 @@
 language: generic
 
 os: osx
-osx_image: beta-xcode6.1
+osx_image: xcode6.4
 
 env:
   matrix:
     
-    - CONDA_PERL=5.20.3.1
+    - CONDA_PERL=5.20.3.1  CONDA_PY=27
+    - CONDA_PERL=5.22.0.1  CONDA_PY=27
+    - CONDA_PERL=5.22.2.1  CONDA_PY=27
   global:
     # The BINSTAR_TOKEN secure variable. This is defined canonically in conda-forge.yml.
     - secure: "SOXlOnOjZlCdyitbhZ5OLQfsbIEyYDE8l9noEUkcqtimJF/qK5Fts8t2p7WxzsBE22sdlTjZ96E/3n2RSRYT5F8kfK7LEvfaVCIuCmWudV4Od5yJTO+L7mL75/dXF3DNjhHeyTNgDGmro6HFHcZxLBSGlnl3i9z4EIzHSGyP22CuHp6rsVSX95A72Pa+Hh9vPST8/h/YzGlXEXvdPX+RL1vz1UoaC/0tIOJ/GBM0Jhy1f5QzMUZdNKxn94VJhq+sCHBZQ3AAmgENAI9qcjEln4Fo6qe5uLQ44yhoFi/qV2HFV6OwmGudZB/c71pa2NrcAV1QkOIH2o+yUNZRVXs2aughroPOv1uR9Re5hrcBtWn8yfD3vnAKWlBn1oiB1iwzGWZ5eqFqJsGvd+I4Q0YUiIAjsw40WHpeU/wtFRTTgnbQL9QWiQ2FWrGbjQpI6jsWqF8DWQnUcuESTYAoMDsM1pUK2RvZyXp6jS/1FFQapi5B0Zzt4kbVFQBwMPBoTdWlCT4kT5zk1ps06aXAX3wgikyu4unHotPeZRmYW0VETO8IN8EA81oIZP28qIqL/6Cs5T71y4Z6RJ4nBufMN7KVAAk6tSkjKlmfOKLSxa7NCEi03mbmzuXXOufVgLonToV831ltpVQ7t7kLbB+UMEXFbAgOza4rCzhplWeEKc/9svk="
@@ -17,7 +19,7 @@ env:
 
 before_install:
     # Remove homebrew.
-    - brew remove --force $(brew list)
+    - brew remove --force --ignore-dependencies $(brew list)
     - brew cleanup -s
     - rm -rf $(brew --cache)
 
@@ -29,18 +31,14 @@ install:
       bash $MINICONDA_FILE -b
 
       source /Users/travis/miniconda3/bin/activate root
+      conda config --remove channels defaults
+      conda config --add channels defaults
       conda config --add channels conda-forge
       conda config --set show_channel_urls true
       conda install --yes --quiet conda-forge-build-setup
       source run_conda_forge_build_setup
 
-      # install conda-build 2.x to build with a long prefix
-      conda install --yes --quiet conda-build=2
-      conda info
-
 script:
   - conda build ./recipe
 
   - upload_or_check_non_existence ./recipe conda-forge --channel=main
-  # inspect the prefix lengths of the built packages
-  - conda inspect prefix-lengths /Users/travis/miniconda3/conda-bld/osx-64/*.tar.bz2
