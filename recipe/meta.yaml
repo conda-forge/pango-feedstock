@@ -18,7 +18,7 @@ build:
 
 requirements:
   build:
-    - perl
+    - perl 5.22.2.1
     - pkg-config
     - harfbuzz 1.3.*
     # NOTE: harfbuzz installs everything that pango needs, but to avoid issues
