@@ -1,5 +1,5 @@
 {% set major = "1.40" %}
-{% set patch = "3" %}
+{% set patch = "4" %}
 {% set version = major + "." + patch %}
 
 package:
@@ -9,18 +9,18 @@ package:
 source:
   url: http://ftp.gnome.org/pub/GNOME/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
   fn: pango-{{ version }}.tar.xz
-  sha256: abba8b5ce728520c3a0f1535eab19eac3c14aeef7faa5aded90017ceac2711d3
+  sha256: f8fdc5fc66356dc4edf915048cceeee065a0e0cb70b3b2598f62bda320129a3e
 
 build:
-  number: 3
-  skip: True  # [win or py3k]
+  number: 0
+  skip: true  # [win or py3k]
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
     - perl 5.22.2.1
     - pkg-config
-    - harfbuzz 1.3.*
+    - harfbuzz 1.4.*
     # NOTE: harfbuzz installs everything that pango needs, but to avoid issues
     # with defaults we need to pin against conda-forge versions.
     - fontconfig 2.12.*
@@ -29,7 +29,7 @@ requirements:
     - python >=2.7,<3  # [not win]
     - libpng >=1.6.28,<1.7
   run:
-    - harfbuzz 1.3.*
+    - harfbuzz 1.4.*
     - fontconfig 2.12.*
     - freetype 2.7|2.7.*
     - libpng >=1.6.28,<1.7
@@ -37,8 +37,8 @@ requirements:
 test:
   commands:
     - pango-view --help
-    - conda inspect linkages -p $PREFIX pango  # [not win]
-    - conda inspect objects -p $PREFIX pango  # [osx]
+    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
+    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
 
 about:
   home: http://www.pango.org/
