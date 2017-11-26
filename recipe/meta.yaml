@@ -1,5 +1,5 @@
 {% set major = "1.40" %}
-{% set patch = "4" %}
+{% set patch = "14" %}
 {% set version = major + "." + patch %}
 
 package:
@@ -8,8 +8,7 @@ package:
 
 source:
   url: http://ftp.gnome.org/pub/GNOME/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
-  fn: pango-{{ version }}.tar.xz
-  sha256: f8fdc5fc66356dc4edf915048cceeee065a0e0cb70b3b2598f62bda320129a3e
+  sha256: 90af1beaa7bf9e4c52db29ec251ec4fd0a8f2cc185d521ad1f88d01b3a6a17e3
 
 build:
   number: 0
@@ -20,19 +19,19 @@ requirements:
   build:
     - perl 5.22.2.1
     - pkg-config
-    - harfbuzz 1.4.*
+    - harfbuzz 1.7.*
     # NOTE: harfbuzz installs everything that pango needs, but to avoid issues
     # with defaults we need to pin against conda-forge versions.
     - fontconfig 2.12.*
-    - freetype 2.7|2.7.*
+    - freetype 2.8.1
     - gobject-introspection  # [not win]
     - python >=2.7,<3  # [not win]
-    - libpng >=1.6.28,<1.7
+    - libpng >=1.6.32,<1.6.35
   run:
-    - harfbuzz 1.4.*
+    - harfbuzz 1.7.*
     - fontconfig 2.12.*
-    - freetype 2.7|2.7.*
-    - libpng >=1.6.28,<1.7
+    - freetype 2.8.1
+    - libpng >=1.6.32,<1.6.35
 
 test:
   commands:
