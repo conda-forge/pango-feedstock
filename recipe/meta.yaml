@@ -11,27 +11,30 @@ source:
   sha256: 90af1beaa7bf9e4c52db29ec251ec4fd0a8f2cc185d521ad1f88d01b3a6a17e3
 
 build:
-  number: 0
-  skip: true  # [win or py3k]
+  number: 1
+  skip: true  # [win]
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
-    - perl 5.22.2.1
+    - perl
     - pkg-config
-    - harfbuzz 1.7.*
+    - pthread-stubs
+    - python >=2.7,<3  # [not win]
+    - {{ compiler('c') }}
+  host:
+    - harfbuzz
     # NOTE: harfbuzz installs everything that pango needs, but to avoid issues
     # with defaults we need to pin against conda-forge versions.
-    - fontconfig 2.12.*
-    - freetype 2.8.1
+    - fontconfig
+    - freetype
     - gobject-introspection  # [not win]
-    - python >=2.7,<3  # [not win]
-    - libpng >=1.6.32,<1.6.35
+    - libpng
   run:
-    - harfbuzz 1.7.*
-    - fontconfig 2.12.*
-    - freetype 2.8.1
-    - libpng >=1.6.32,<1.6.35
+    - harfbuzz
+    - fontconfig
+    - freetype
+    - libpng
 
 test:
   commands:
