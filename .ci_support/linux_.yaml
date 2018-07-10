@@ -1,5 +1,7 @@
 c_compiler:
 - toolchain_c
+cairo:
+- '1.14'
 fontconfig:
 - '2.13'
 freetype:
@@ -11,6 +13,8 @@ libpng:
 perl:
 - '5.26'
 pin_run_as_build:
+  cairo:
+    max_pin: x.x
   fontconfig:
     max_pin: x
   freetype:
