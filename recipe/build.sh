@@ -7,6 +7,11 @@ if [ $(uname) == Darwin ] ; then
     export LDFLAGS="${LDFLAGS} -Wl,-rpath,${PREFIX}/lib"
 fi
 
+# Cf. https://github.com/conda-forge/staged-recipes/issues/673, we're in the
+# process of excising Libtool files from our packages. Existing ones can break
+# the build while this happens.
+find $PREFIX -name '*.la' -delete
+
 ./configure --prefix=$PREFIX \
             --with-xft \
             --with-cairo=$PREFIX
@@ -35,3 +40,7 @@ make
 # FAIL test-layout (exit status: 133)
 # make check
 make install
+
+# Remove any new Libtool files we may have installed. It is intended that
+# conda-build will eventually do this automatically.
+find $PREFIX -name '*.la' -delete
