@@ -3,7 +3,7 @@ c_compiler:
 fontconfig:
 - '2.13'
 freetype:
-- 2.8.1
+- 2.9.1
 harfbuzz:
 - '1'
 libpng:
@@ -14,7 +14,7 @@ pin_run_as_build:
   fontconfig:
     max_pin: x
   freetype:
-    max_pin: x.x
+    max_pin: x
   harfbuzz:
     max_pin: x
   libpng:
