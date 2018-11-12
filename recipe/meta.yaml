@@ -54,7 +54,7 @@ about:
     context of the GTK+ widget toolkit. Pango forms the core of text and font
     handling for GTK+-2.x.
   doc_url: http://www.pango.org/
-  dev_url: https://github.com/phuang/pango
+  dev_url: https://gitlab.gnome.org/GNOME/pango
 
 extra:
   recipe-maintainers:
