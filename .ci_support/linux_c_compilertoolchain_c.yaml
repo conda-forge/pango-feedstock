@@ -15,7 +15,7 @@ freetype:
 harfbuzz:
 - '1'
 libpng:
-- 1.6.34
+- 1.6.35
 perl:
 - '5.26'
 pin_run_as_build:
