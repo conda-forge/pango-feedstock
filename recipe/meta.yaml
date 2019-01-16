@@ -23,6 +23,7 @@ requirements:
     - python >=2.7,<3  # [not win]
     - {{ compiler('c') }}
   host:
+    - cairo
     - harfbuzz
     # NOTE: harfbuzz installs everything that pango needs, but to avoid issues
     # with defaults we need to pin against conda-forge versions.
@@ -31,6 +32,7 @@ requirements:
     - gobject-introspection  # [not win]
     - libpng
   run:
+    - cairo
     - harfbuzz
     - fontconfig
     - freetype
