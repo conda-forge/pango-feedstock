@@ -17,6 +17,7 @@ build:
 
 requirements:
   build:
+    - make
     - perl
     - pkg-config
     - pthread-stubs
