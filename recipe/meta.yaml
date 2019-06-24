@@ -11,12 +11,13 @@ source:
   sha256: 90af1beaa7bf9e4c52db29ec251ec4fd0a8f2cc185d521ad1f88d01b3a6a17e3
 
 build:
-  number: 1004
+  number: 1005
   skip: true  # [win]
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
+    - make
     - perl
     - pkg-config
     - pthread-stubs
