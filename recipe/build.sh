@@ -44,3 +44,6 @@ make install
 # Remove any new Libtool files we may have installed. It is intended that
 # conda-build will eventually do this automatically.
 find $PREFIX -name '*.la' -delete
+
+#### XX TEMP DEBUG
+find $PREFIX -print
