@@ -45,5 +45,5 @@ make install
 # conda-build will eventually do this automatically.
 find $PREFIX -name '*.la' -delete
 
-#### XX TEMP DEBUG
-find $PREFIX -print
+# XXX GROSS TEMP hack get the aarch64 build working despite pango-feedstock#24.
+find $PREFIX/lib -maxdepth 1 -lname '*fribidi*' -delete -ls
