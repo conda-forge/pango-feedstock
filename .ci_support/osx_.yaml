@@ -17,13 +17,13 @@ freetype:
 harfbuzz:
 - '2'
 libpng:
-- 1.6.35
+- '1.6'
 macos_machine:
 - x86_64-apple-darwin13.4.0
 macos_min_version:
 - '10.9'
 perl:
-- '5.26'
+- 5.26.2
 pin_run_as_build:
   cairo:
     max_pin: x.x
