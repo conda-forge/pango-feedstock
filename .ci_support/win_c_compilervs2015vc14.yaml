@@ -1,0 +1,24 @@
+c_compiler:
+- vs2015
+cairo:
+- '1.16'
+channel_sources:
+- conda-forge,defaults
+channel_targets:
+- conda-forge main
+glib:
+- '2.58'
+libpng:
+- '1.6'
+pin_run_as_build:
+  cairo:
+    max_pin: x.x
+  libpng:
+    max_pin: x.x
+  vc:
+    max_pin: x
+vc:
+- '14'
+zip_keys:
+- - vc
+  - c_compiler
