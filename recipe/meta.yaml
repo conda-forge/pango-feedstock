@@ -9,9 +9,12 @@ package:
 source:
   url: http://ftp.gnome.org/pub/GNOME/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
   sha256: 1d2b74cd63e8bd41961f2f8d952355aa0f9be6002b52c8aa7699d9f5da597c9d
+  patches:
+    # pc file patch should not be needed for version 1.43+
+    - windows_fix_libm_in_pc_file.patch  # [win]
 
 build:
-  number: 3
+  number: 4
   skip: true  # [win and vc<14]
   detect_binary_files_with_prefix: true
 
