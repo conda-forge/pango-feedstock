@@ -1,5 +1,5 @@
-{% set major = "1.42" %}
-{% set patch = "4" %}
+{% set major = "1.46" %}
+{% set patch = "0" %}
 {% set version = major + "." + patch %}
 
 package:
@@ -8,45 +8,39 @@ package:
 
 source:
   url: http://ftp.gnome.org/pub/GNOME/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
-  sha256: 1d2b74cd63e8bd41961f2f8d952355aa0f9be6002b52c8aa7699d9f5da597c9d
+  sha256: 9a81572ebb946187fbdd69d5ffc57e2f7a1f768cd8d2fd89dbb03fb9002a99b5
   patches:
     # pc file patch should not be needed for version 1.43+
     - windows_fix_libm_in_pc_file.patch  # [win]
 
 build:
-  number: 4
+  number: 0
   skip: true  # [win and vc<14]
   detect_binary_files_with_prefix: true
 
 requirements:
   build:
-    - make  # [not win]
-    # see https://github.com/conda-forge/meson-feedstock/issues/30
-    - meson 0.53.2  # [win]
-    - ninja  # [win]
-    - perl  # [not win]
+    - meson
+    - ninja
     - pkg-config
     - pthread-stubs  # [linux]
-    - python >=2.7,<3  # [not win]
     - {{ compiler('c') }}
   host:
+    - gobject-introspection
     - cairo
     - fribidi
     - glib
-    - harfbuzz  # [not win]
-    # NOTE: harfbuzz installs everything that pango needs, but to avoid issues
-    # with defaults we need to pin against conda-forge versions.
-    - fontconfig  # [not win]
-    - freetype  # [not win]
-    - gobject-introspection
+    - harfbuzz
+    - fontconfig
+    - freetype
     - libpng
   run:
     - cairo
     - fribidi
     - glib
-    - harfbuzz  # [not win]
-    - fontconfig  # [not win]
-    - freetype  # [not win]
+    - harfbuzz
+    - fontconfig
+    - freetype
     - libpng
 
 test:
