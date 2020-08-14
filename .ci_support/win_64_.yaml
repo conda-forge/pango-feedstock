@@ -1,21 +1,33 @@
 c_compiler:
-- vs2015
+- vs2017
 cairo:
 - '1.16'
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
+fontconfig:
+- '2.13'
+freetype:
+- 2.9.1
 glib:
 - '2.58'
+harfbuzz:
+- '2'
 libpng:
 - '1.6'
 pin_run_as_build:
   cairo:
     max_pin: x.x
+  fontconfig:
+    max_pin: x
+  freetype:
+    max_pin: x
+  harfbuzz:
+    max_pin: x
   libpng:
     max_pin: x.x
-  vc:
-    max_pin: x
+target_platform:
+- win-64
 vc:
 - '14'

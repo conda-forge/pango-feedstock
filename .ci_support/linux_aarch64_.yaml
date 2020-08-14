@@ -26,8 +26,6 @@ harfbuzz:
 - '2'
 libpng:
 - '1.6'
-perl:
-- 5.26.2
 pin_run_as_build:
   cairo:
     max_pin: x.x
@@ -39,5 +37,5 @@ pin_run_as_build:
     max_pin: x
   libpng:
     max_pin: x.x
-  perl:
-    max_pin: x.x.x
+target_platform:
+- linux-aarch64
