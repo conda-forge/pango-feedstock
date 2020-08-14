@@ -9,9 +9,6 @@ package:
 source:
   url: http://ftp.gnome.org/pub/GNOME/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
   sha256: 9a81572ebb946187fbdd69d5ffc57e2f7a1f768cd8d2fd89dbb03fb9002a99b5
-  patches:
-    # pc file patch should not be needed for version 1.43+
-    - windows_fix_libm_in_pc_file.patch  # [win]
 
 build:
   number: 0
@@ -25,11 +22,12 @@ requirements:
     - pkg-config
     - pthread-stubs  # [linux]
     - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
   host:
     - gobject-introspection
     - cairo
     - fribidi
-    - glib
+    - glib >=2.60.0
     - harfbuzz
     - fontconfig
     - freetype
@@ -37,7 +35,7 @@ requirements:
   run:
     - cairo
     - fribidi
-    - glib
+    - glib >=2.60.0
     - harfbuzz
     - fontconfig
     - freetype
