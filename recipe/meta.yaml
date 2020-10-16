@@ -14,8 +14,7 @@ source:
     - windows_fix_libm_in_pc_file.patch  # [win]
 
 build:
-  number: 4
-  skip: true  # [win and vc<14]
+  number: 5
   detect_binary_files_with_prefix: true
 
 requirements:
@@ -43,7 +42,6 @@ requirements:
   run:
     - cairo
     - fribidi
-    - glib
     - harfbuzz  # [not win]
     - fontconfig  # [not win]
     - freetype  # [not win]
