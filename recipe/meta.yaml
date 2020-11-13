@@ -16,6 +16,8 @@ source:
 build:
   number: 5
   detect_binary_files_with_prefix: true
+  ignore_run_exports_from:
+    - {{ compiler('cxx') }}
 
 requirements:
   build:
@@ -29,6 +31,7 @@ requirements:
     - python >=3  # [not win]
     - libtool  # [unix]
     - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
   host:
     - cairo
     - fribidi
