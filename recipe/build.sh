@@ -10,6 +10,7 @@ find $PREFIX -name '*.la' -delete
 ./configure --prefix=$PREFIX \
             --with-xft \
             --with-cairo=$PREFIX
+cat config.log
 
 make V=1
 # # FIXME: There is one failure:
