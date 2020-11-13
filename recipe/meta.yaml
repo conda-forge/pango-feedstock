@@ -27,6 +27,7 @@ requirements:
     - pkg-config
     - pthread-stubs  # [linux]
     - python >=2.7,<3  # [not win]
+    - libtool  # [unix]
     - {{ compiler('c') }}
   host:
     - cairo
@@ -52,8 +53,6 @@ test:
     - pkg-config
   commands:
     - pango-view --help
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
 
     # check that libraries are installed and can be found through pkg-config
     # (used by downstream builds)
