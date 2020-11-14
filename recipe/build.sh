@@ -2,6 +2,12 @@
 # Get an updated config.sub and config.guess
 cp $BUILD_PREFIX/share/libtool/build-aux/config.* .
 
+if [[ "$target_platform" == osx-* ]]; then
+  # For some reason, these are not getting added in osx-arm64 platform.
+  # since it doesn't hurt, add these to all osx-* platforms.
+  export LIBS="$LIBS -framework CoreFoundation -framework ApplicationServices"
+fi
+
 # Cf. https://github.com/conda-forge/staged-recipes/issues/673, we're in the
 # process of excising Libtool files from our packages. Existing ones can break
 # the build while this happens.
