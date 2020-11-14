@@ -1,4 +1,6 @@
 #!/bin/bash
+
+unset _CONDA_PYTHON_SYSCONFIGDATA_NAME
 # Get an updated config.sub and config.guess
 cp $BUILD_PREFIX/share/libtool/build-aux/config.* .
 
