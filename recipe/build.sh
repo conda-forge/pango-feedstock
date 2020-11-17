@@ -12,8 +12,8 @@ fi
 
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
   (
-    mkdir -p build-host
-    pushd build-host
+    mkdir -p native-build
+    pushd native-build
 
     export CC=$CC_FOR_BUILD
     export AR=($CC_FOR_BUILD -print-prog-name=ar)
@@ -26,7 +26,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     unset CPPFLAGS
     export host_alias=$build_alias
 
-    ./configure --prefix=$BUILD_PREFIX \
+    ../configure --prefix=$BUILD_PREFIX \
                 --with-xft \
                 --with-cairo=$BUILD_PREFIX \
 
