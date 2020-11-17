@@ -32,6 +32,10 @@ requirements:
     - libtool  # [unix]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
+    - cairo     # [build_platform != target_platform]
+    - fribidi   # [build_platform != target_platform]
+    - glib      # [build_platform != target_platform]
+    - harfbuzz  # [build_platform != target_platform]
   host:
     - cairo
     - fribidi
