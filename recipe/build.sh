@@ -36,6 +36,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     export GI_CROSS_LAUNCHER=$PREFIX/libexec/gi-cross-launcher-save.sh
     make -j${CPU_COUNT}
     make install
+    cp $BUILD_PREFIX/bin/g-ir-scanner $PREFIX/bin/g-ir-scanner
     popd
   )
   export GI_CROSS_LAUNCHER=$PREFIX/libexec/gi-cross-launcher-load.sh
