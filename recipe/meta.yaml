@@ -36,6 +36,10 @@ requirements:
     - fribidi   # [build_platform != target_platform]
     - glib      # [build_platform != target_platform]
     - harfbuzz  # [build_platform != target_platform]
+    - fontconfig  # [build_platform != target_platform]
+    - freetype    # [build_platform != target_platform]
+    - gobject-introspection  # [build_platform != target_platform]
+    - libpng                 # [build_platform != target_platform]
   host:
     - cairo
     - fribidi
