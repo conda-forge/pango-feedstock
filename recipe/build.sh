@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 unset _CONDA_PYTHON_SYSCONFIGDATA_NAME
 # Get an updated config.sub and config.guess
 cp $BUILD_PREFIX/share/libtool/build-aux/config.* .
@@ -30,6 +32,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
                 --with-xft \
                 --with-cairo=$BUILD_PREFIX \
 
+    file $PREFIX/lib/gobject-introspection/giscanner/_giscanner.cpython-39-darwin.so
     # This script would generate the functions.txt and dump.xml and save them
     # This is loaded in the native build. We assume that the functions exported
     # by glib are the same for the native and cross builds
@@ -37,8 +40,10 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     make -j${CPU_COUNT}
     make install
     cp $BUILD_PREFIX/bin/g-ir-scanner $PREFIX/bin/g-ir-scanner
+    file $PREFIX/lib/gobject-introspection/giscanner/_giscanner.cpython-39-darwin.so
     rsync -ahvpi $BUILD_PREFIX/lib/gobject-introspection $PREFIX/lib/gobject-introspection
     popd
+    file $PREFIX/lib/gobject-introspection/giscanner/_giscanner.cpython-39-darwin.so
   )
   export GI_CROSS_LAUNCHER=$PREFIX/libexec/gi-cross-launcher-load.sh
 fi
