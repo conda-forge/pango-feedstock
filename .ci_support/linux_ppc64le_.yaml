@@ -4,16 +4,18 @@ c_compiler_version:
 - '8'
 cairo:
 - '1.16'
+cdt_name:
+- cos7
 channel_sources:
 - conda-forge,defaults
 channel_targets:
 - conda-forge main
 docker_image:
-- condaforge/linux-anvil-ppc64le
+- quay.io/condaforge/linux-anvil-ppc64le
 fontconfig:
 - '2.13'
 freetype:
-- 2.9.1
+- '2'
 glib:
 - 2.64.6
 harfbuzz:

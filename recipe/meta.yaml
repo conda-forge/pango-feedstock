@@ -16,6 +16,8 @@ source:
 build:
   number: 5
   detect_binary_files_with_prefix: true
+  ignore_run_exports_from:
+    - {{ compiler('cxx') }}
 
 requirements:
   build:
@@ -26,8 +28,18 @@ requirements:
     - perl  # [not win]
     - pkg-config
     - pthread-stubs  # [linux]
-    - python >=2.7,<3  # [not win]
+    - python >=3  # [not win]
+    - libtool  # [unix]
     - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cairo     # [build_platform != target_platform]
+    - fribidi   # [build_platform != target_platform]
+    - glib      # [build_platform != target_platform]
+    - harfbuzz  # [build_platform != target_platform]
+    - fontconfig  # [build_platform != target_platform]
+    - freetype    # [build_platform != target_platform]
+    - gobject-introspection  # [build_platform != target_platform]
+    - libpng                 # [build_platform != target_platform]
   host:
     - cairo
     - fribidi
@@ -52,8 +64,6 @@ test:
     - pkg-config
   commands:
     - pango-view --help
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
 
     # check that libraries are installed and can be found through pkg-config
     # (used by downstream builds)
