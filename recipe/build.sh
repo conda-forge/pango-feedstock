@@ -43,7 +43,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     cp $BUILD_PREFIX/bin/g-ir-scanner $PREFIX/bin/g-ir-scanner
     file $PREFIX/lib/gobject-introspection/giscanner/_giscanner.cpython-39-darwin.so
     file $BUILD_PREFIX/lib/gobject-introspection/giscanner/_giscanner.cpython-39-darwin.so
-    rsync -ahvpi $BUILD_PREFIX/lib/gobject-introspection $PREFIX/lib/gobject-introspection
+    rsync -ahvpiI $BUILD_PREFIX/lib/gobject-introspection/ $PREFIX/lib/gobject-introspection/
     popd
     file $PREFIX/lib/gobject-introspection/giscanner/_giscanner.cpython-39-darwin.so
     file $BUILD_PREFIX/lib/gobject-introspection/giscanner/_giscanner.cpython-39-darwin.so
