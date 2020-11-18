@@ -37,6 +37,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     make -j${CPU_COUNT}
     make install
     cp $BUILD_PREFIX/bin/g-ir-scanner $PREFIX/bin/g-ir-scanner
+    rsync -ahvpi $BUILD_PREFIX/lib/gobject-introspection $PREFIX/lib/gobject-introspection
     popd
   )
   export GI_CROSS_LAUNCHER=$PREFIX/libexec/gi-cross-launcher-load.sh
@@ -76,3 +77,4 @@ make V=1
 # FAIL test-layout (exit status: 133)
 # make check
 make install
+rm -rf $PREFIX/lib/gobject-introspection
