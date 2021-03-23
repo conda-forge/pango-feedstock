@@ -39,6 +39,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
     mkdir -p native-build
 
     export CC=$CC_FOR_BUILD
+    export CXX=$CXX_FOR_BUILD
     export OBJC=$OBJC_FOR_BUILD
     export AR=($CC_FOR_BUILD -print-prog-name=ar)
     export NM=($CC_FOR_BUILD -print-prog-name=nm)
