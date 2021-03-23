@@ -18,8 +18,8 @@ set ^"MESON_OPTIONS=^
   --buildtype=release ^
   --backend=ninja ^
   -Dintrospection=enabled ^
-  -Dfontconfig=true ^
-  -Dfreetype=true ^
+  -Dfontconfig=enabled ^
+  -Dfreetype=enabled ^
   -Dgtk_doc=false ^
  ^"
 
