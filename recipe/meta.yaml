@@ -59,9 +59,8 @@ test:
     {% set libs = [
         "Pango",
         "PangoCairo",
+        "PangoFT2",
     ] %}
-    {% set libs = libs + ["PangoFT2"] %}  # [unix]
-    {% set libs = libs + ["PangoWin32"] %}  # [win]
     {% for lib in libs %}
     - test -f $PREFIX/lib/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
     - test -f `pkg-config --variable=libdir --dont-define-prefix {{ lib | lower }}`/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
