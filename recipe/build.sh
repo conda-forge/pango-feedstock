@@ -1,23 +1,46 @@
 #!/bin/bash
 
-set -x
+set -xeo pipefail
 
-unset _CONDA_PYTHON_SYSCONFIGDATA_NAME
-# Get an updated config.sub and config.guess
-cp $BUILD_PREFIX/share/libtool/build-aux/config.* .
-
-if [[ "$target_platform" == osx-* ]]; then
-  # For some reason, these are not getting added in osx-arm64 platform.
-  # since it doesn't hurt, add these to all osx-* platforms.
-  export LIBS="$LIBS -framework CoreFoundation -framework ApplicationServices"
+if [[ "$target_platform" = osx-* ]] ; then
+    # The -dead_strip_dylibs option breaks g-ir-scanner in this package: the
+    # scanner links a test executable to find paths to dylibs, but with this
+    # option the linker strips them out. The resulting error message is
+    # "ERROR: can't resolve libraries to shared libraries: ...".
+    export LDFLAGS="$(echo $LDFLAGS |sed -e "s/-Wl,-dead_strip_dylibs//g")"
+    export LDFLAGS_LD="$(echo $LDFLAGS_LD |sed -e "s/-dead_strip_dylibs//g")"
 fi
 
-if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
+# get meson to find pkg-config when cross compiling
+export PKG_CONFIG=$BUILD_PREFIX/bin/pkg-config
+
+# need to find gobject-introspection-1.0 as a "native" (build) pkg-config dep
+# meson uses PKG_CONFIG_PATH to search when not cross-compiling and
+# PKG_CONFIG_PATH_FOR_BUILD when cross-compiling,
+# so add the build prefix pkgconfig path to the appropriate variables
+export PKG_CONFIG_PATH_FOR_BUILD=$BUILD_PREFIX/lib/pkgconfig
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
+
+export XDG_DATA_DIRS=${XDG_DATA_DIRS}:$PREFIX/share
+
+meson_config_args=(
+    -Dintrospection=enabled
+    -Dfontconfig=enabled
+    -Dfreetype=enabled
+    -Dgtk_doc=false
+)
+
+# ensure that the post install script is ignored
+export DESTDIR="/"
+
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
+  unset _CONDA_PYTHON_SYSCONFIGDATA_NAME
   (
     mkdir -p native-build
-    pushd native-build
 
     export CC=$CC_FOR_BUILD
+    export CXX=$CXX_FOR_BUILD
+    export OBJC=$OBJC_FOR_BUILD
     export AR=($CC_FOR_BUILD -print-prog-name=ar)
     export NM=($CC_FOR_BUILD -print-prog-name=nm)
     export LDFLAGS=${LDFLAGS//$PREFIX/$BUILD_PREFIX}
@@ -27,58 +50,31 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == 1 ]]; then
     unset CFLAGS
     unset CPPFLAGS
     export host_alias=$build_alias
+    export PKG_CONFIG_PATH=$BUILD_PREFIX/lib/pkgconfig
 
-    ../configure --prefix=$BUILD_PREFIX \
-                --with-xft \
-                --with-cairo=$BUILD_PREFIX \
+    meson setup native-build \
+        "${meson_config_args[@]}" \
+        --buildtype=release \
+        --prefix=$BUILD_PREFIX \
+        -Dlibdir=lib \
+        --wrap-mode=nofallback
 
     # This script would generate the functions.txt and dump.xml and save them
     # This is loaded in the native build. We assume that the functions exported
     # by glib are the same for the native and cross builds
-    export GI_CROSS_LAUNCHER=$PREFIX/libexec/gi-cross-launcher-save.sh
-    make -j${CPU_COUNT}
-    make install
-    rm -rf $PREFIX/bin/g-ir-scanner $PREFIX/bin/g-ir-compiler
-    ln -s $BUILD_PREFIX/bin/g-ir-scanner $PREFIX/bin/g-ir-scanner
-    ln -s $BUILD_PREFIX/bin/g-ir-compiler $PREFIX/bin/g-ir-compiler
-    rsync -ahvpiI $BUILD_PREFIX/lib/gobject-introspection/ $PREFIX/lib/gobject-introspection/
-    popd
+    export GI_CROSS_LAUNCHER=$BUILD_PREFIX/libexec/gi-cross-launcher-save.sh
+    ninja -v -C native-build -j ${CPU_COUNT}
+    ninja -C native-build install -j ${CPU_COUNT}
   )
-  export GI_CROSS_LAUNCHER=$PREFIX/libexec/gi-cross-launcher-load.sh
+  export GI_CROSS_LAUNCHER=$BUILD_PREFIX/libexec/gi-cross-launcher-load.sh
 fi
 
-# Cf. https://github.com/conda-forge/staged-recipes/issues/673, we're in the
-# process of excising Libtool files from our packages. Existing ones can break
-# the build while this happens.
-find $PREFIX -name '*.la' -delete
-
-./configure --prefix=$PREFIX \
-            --with-xft \
-            --with-cairo=$PREFIX
-cat config.log
-
-make V=1
-# # FIXME: There is one failure:
-# ========================================
-#    pango 1.40.1: tests/test-suite.log
-# ========================================
-#
-# # TOTAL: 12
-# # PASS:  11
-# # SKIP:  0
-# # XFAIL: 0
-# # FAIL:  1
-# # XPASS: 0
-# # ERROR: 0
-#
-# .. contents:: :depth: 2
-#
-# FAIL: test-layout
-# =================
-#
-# /layout/valid-1.markup:
-# (/opt/conda/conda-bld/work/pango-1.40.1/tests/.libs/lt-test-layout:5078): Pango-CRITICAL **: pango_font_describe: assertion 'font != NULL' failed
-# FAIL test-layout (exit status: 133)
-# make check
-make install
-rm -rf $PREFIX/lib/gobject-introspection
+meson setup builddir \
+    ${MESON_ARGS} \
+    "${meson_config_args[@]}" \
+    --buildtype=release \
+    --prefix=$PREFIX \
+    -Dlibdir=lib \
+    --wrap-mode=nofallback
+ninja -v -C builddir -j ${CPU_COUNT}
+ninja -C builddir install -j ${CPU_COUNT}
