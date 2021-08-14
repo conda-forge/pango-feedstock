@@ -1,5 +1,5 @@
 {% set major = "1.48" %}
-{% set patch = "7" %}
+{% set patch = "8" %}
 {% set version = major + "." + patch %}
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://download.gnome.org/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
-  sha256: 28a82f6a6cab60aa3b75a90f04197ead2d311fa8fe8b7bfdf8666e2781d506dc
+  sha256: 009d9d830ecbe11911d6637e48eec1c51390d3d12eb286035ef7c641f3c87410
 
 build:
   number: 0
