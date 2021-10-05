@@ -21,7 +21,7 @@ freetype:
 glib:
 - '2.68'
 harfbuzz:
-- '2'
+- '3'
 libpng:
 - '1.6'
 macos_machine:
