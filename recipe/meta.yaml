@@ -20,7 +20,7 @@ build:
 
 requirements:
   build:
-    - meson 0.56.2
+    - meson
     - ninja
     - pkg-config
     - {{ compiler('c') }}
