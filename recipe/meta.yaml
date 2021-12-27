@@ -1,5 +1,5 @@
-{% set major = "1.48" %}
-{% set patch = "10" %}
+{% set major = "1.50" %}
+{% set patch = "3" %}
 {% set version = major + "." + patch %}
 
 package:
@@ -8,10 +8,10 @@ package:
 
 source:
   url: https://download.gnome.org/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
-  sha256: 21e1f5798bcdfda75eabc4280514b0896ab56f656d4e7e66030b9a2535ecdc98
+  sha256: 4add05edf51c1fb375a1ccde7498914120e23cb280dd7395b1aeb441f1838a4c
 
 build:
-  number: 2
+  number: 0
   detect_binary_files_with_prefix: true
   ignore_run_exports_from:
     - {{ compiler('cxx') }}
@@ -20,7 +20,7 @@ build:
 
 requirements:
   build:
-    - meson 0.56.2
+    - meson
     - ninja
     - pkg-config
     - {{ compiler('c') }}
