@@ -1,13 +1,12 @@
-{% set major = "1.50" %}
-{% set patch = "3" %}
-{% set version = major + "." + patch %}
+{% set version = "1.50.3" %}
+{% set version_majmin = ".".join(version.split(".", 2)[:2]) %}
 
 package:
   name: pango
   version: {{ version }}
 
 source:
-  url: https://download.gnome.org/sources/pango/{{ major }}/pango-{{ version }}.tar.xz
+  url: https://download.gnome.org/sources/pango/{{ version_majmin }}/pango-{{ version }}.tar.xz
   sha256: 4add05edf51c1fb375a1ccde7498914120e23cb280dd7395b1aeb441f1838a4c
 
 build:
