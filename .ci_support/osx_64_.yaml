@@ -19,7 +19,7 @@ fontconfig:
 freetype:
 - '2'
 glib:
-- '2.68'
+- '2'
 harfbuzz:
 - '3'
 libpng:
