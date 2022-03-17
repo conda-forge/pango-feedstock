@@ -3,7 +3,7 @@ BUILD:
 c_compiler:
 - gcc
 c_compiler_version:
-- '9'
+- '10'
 cairo:
 - '1.16'
 cdt_arch:
@@ -17,7 +17,7 @@ channel_targets:
 cxx_compiler:
 - gxx
 cxx_compiler_version:
-- '9'
+- '10'
 docker_image:
 - quay.io/condaforge/linux-anvil-aarch64
 fontconfig:
@@ -25,7 +25,7 @@ fontconfig:
 freetype:
 - '2'
 glib:
-- '2.68'
+- '2'
 harfbuzz:
 - '3'
 libpng:
