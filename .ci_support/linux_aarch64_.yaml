@@ -27,7 +27,7 @@ freetype:
 glib:
 - '2'
 harfbuzz:
-- '3'
+- '4'
 libpng:
 - '1.6'
 pin_run_as_build:
