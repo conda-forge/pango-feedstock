@@ -5,7 +5,7 @@ c_compiler:
 c_compiler_version:
 - '10'
 cairo:
-- '1.16'
+- '1'
 cdt_arch:
 - aarch64
 cdt_name:
@@ -21,7 +21,7 @@ cxx_compiler_version:
 docker_image:
 - quay.io/condaforge/linux-anvil-aarch64
 fontconfig:
-- '2.13'
+- '2'
 freetype:
 - '2'
 glib:
@@ -30,17 +30,6 @@ harfbuzz:
 - '5'
 libpng:
 - '1.6'
-pin_run_as_build:
-  cairo:
-    max_pin: x.x
-  fontconfig:
-    max_pin: x
-  freetype:
-    max_pin: x
-  harfbuzz:
-    max_pin: x
-  libpng:
-    max_pin: x.x
 target_platform:
 - linux-aarch64
 zip_keys:
