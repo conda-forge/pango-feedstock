@@ -10,7 +10,7 @@ source:
   sha256: caef96d27bbe792a6be92727c73468d832b13da57c8071ef79b9df69ee058fe3
 
 build:
-  number: 0
+  number: 1
   detect_binary_files_with_prefix: true
   ignore_run_exports_from:
     - {{ compiler('cxx') }}
