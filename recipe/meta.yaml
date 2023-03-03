@@ -1,4 +1,4 @@
-{% set version = "1.50.13" %}
+{% set version = "1.50.14" %}
 {% set version_majmin = ".".join(version.split(".", 2)[:2]) %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://download.gnome.org/sources/pango/{{ version_majmin }}/pango-{{ version }}.tar.xz
-  sha256: 5cdcf6d761d26a3eb9412b6cb069b32bd1d9b07abf116321167d94c2189299fd
+  sha256: 1d67f205bfc318c27a29cfdfb6828568df566795df0cb51d2189cde7f2d581e8
 
 build:
   number: 0
