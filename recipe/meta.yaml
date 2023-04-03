@@ -33,6 +33,7 @@ requirements:
     - freetype    # [build_platform != target_platform]
     - libpng                 # [build_platform != target_platform]
   host:
+    - libgirepository
     - cairo
     - fribidi
     - glib
