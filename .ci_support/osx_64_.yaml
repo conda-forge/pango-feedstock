@@ -3,7 +3,7 @@ MACOSX_DEPLOYMENT_TARGET:
 c_compiler:
 - clang
 c_compiler_version:
-- '14'
+- '15'
 cairo:
 - '1'
 channel_sources:
@@ -13,7 +13,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '14'
+- '15'
 fontconfig:
 - '2'
 freetype:
@@ -21,7 +21,7 @@ freetype:
 glib:
 - '2'
 harfbuzz:
-- '6'
+- '7'
 libpng:
 - '1.6'
 macos_machine:
