@@ -1,4 +1,4 @@
-{% set version = "1.52.2" %}
+{% set version = "1.54.0" %}
 {% set version_majmin = ".".join(version.split(".", 2)[:2]) %}
 
 package:
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://download.gnome.org/sources/pango/{{ version_majmin }}/pango-{{ version }}.tar.xz
-  sha256: d0076afe01082814b853deec99f9349ece5f2ce83908b8e58ff736b41f78a96b
+  sha256: 8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8
 
 build:
   number: 0
@@ -23,6 +23,7 @@ requirements:
     - ninja
     - pkg-config
     - {{ compiler('c') }}
+    - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - gobject-introspection
     - cairo     # [build_platform != target_platform]
