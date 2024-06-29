@@ -17,7 +17,7 @@ freetype:
 glib:
 - '2'
 harfbuzz:
-- '8'
+- '9'
 libpng:
 - '1.6'
 target_platform:
