@@ -26,15 +26,17 @@ requirements:
     - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - gobject-introspection
-    - cairo     # [build_platform != target_platform]
-    - fribidi   # [build_platform != target_platform]
-    - glib      # [build_platform != target_platform]
-    - harfbuzz  # [build_platform != target_platform]
+    - cairo       # [build_platform != target_platform]
+    - expat       # [build_platform != target_platform]
+    - fribidi     # [build_platform != target_platform]
+    - glib        # [build_platform != target_platform]
+    - harfbuzz    # [build_platform != target_platform]
     - fontconfig  # [build_platform != target_platform]
     - freetype    # [build_platform != target_platform]
-    - libpng                 # [build_platform != target_platform]
+    - libpng      # [build_platform != target_platform]
   host:
     - cairo
+    - expat  # need to name this explicitly to get the development files
     - fribidi
     - glib
     - harfbuzz
@@ -44,6 +46,7 @@ requirements:
 
 test:
   requires:
+    - expat  # needed for the pkg-config test
     - pkg-config
     - pygobject
   commands:
