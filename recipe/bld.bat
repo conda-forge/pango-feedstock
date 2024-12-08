@@ -8,6 +8,12 @@ set "PKG_CONFIG_PATH=%LIBRARY_LIB%\pkgconfig;%LIBRARY_PREFIX%\share\pkgconfig"
 :: get mixed path (forward slash) form of prefix so host prefix replacement works
 set "LIBRARY_PREFIX_M=%LIBRARY_PREFIX:\=/%"
 
+:: By default Meson tries to run glib-mkenums with the %BUILD_PREFIX% Python, which fails.
+:: In order to override this, we need to use a Meson machine file, because otherwise
+:: Meson prioritizes the results from the glib-2.0 pkg-config file, which don't work.
+echo [binaries] >native_file.txt
+echo glib-mkenums = ['%PREFIX%\python.exe', '%LIBRARY_PREFIX%\bin\glib-mkenums'] >>native_file.txt
+
 set "XDG_DATA_DIRS=%XDG_DATA_DIRS%;%LIBRARY_PREFIX%\share"
 
 :: meson options
@@ -17,6 +23,7 @@ set ^"MESON_OPTIONS=^
   --wrap-mode=nofallback ^
   --buildtype=release ^
   --backend=ninja ^
+  --native-file=native_file.txt ^
   -Dintrospection=enabled ^
   -Dfontconfig=enabled ^
   -Dfreetype=enabled ^
