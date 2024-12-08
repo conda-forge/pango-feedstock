@@ -54,11 +54,7 @@ test:
 
     # check that libraries are installed and can be found through pkg-config
     # (used by downstream builds)
-    {% set libs = [
-        "Pango",
-        "PangoCairo",
-        "PangoFT2",
-    ] %}
+    {% set libs = ["Pango", "PangoCairo", "PangoFT2"] %}
     {% for lib in libs %}
     - test -f $PREFIX/lib/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
     - test -f `pkg-config --variable=libdir --dont-define-prefix {{ lib | lower }}`/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
