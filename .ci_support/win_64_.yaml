@@ -19,7 +19,7 @@ freetype:
 glib:
 - '2'
 harfbuzz:
-- '9'
+- '10'
 libpng:
 - '1.6'
 pango:
