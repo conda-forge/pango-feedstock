@@ -52,6 +52,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
     export host_alias=$build_alias
     export PKG_CONFIG_PATH=$BUILD_PREFIX/lib/pkgconfig
 
+    # Note that we cannot use $MESON_ARGS here because we need to customize --prefix
     meson setup native-build \
         "${meson_config_args[@]}" \
         --buildtype=release \
@@ -72,9 +73,6 @@ fi
 meson setup builddir \
     ${MESON_ARGS} \
     "${meson_config_args[@]}" \
-    --buildtype=release \
-    --prefix=$PREFIX \
-    -Dlibdir=lib \
     --wrap-mode=nofallback
 ninja -v -C builddir -j ${CPU_COUNT}
 ninja -C builddir install -j ${CPU_COUNT}

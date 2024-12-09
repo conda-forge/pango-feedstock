@@ -10,7 +10,7 @@ source:
   sha256: 8a9eed75021ee734d7fc0fdf3a65c3bba51dfefe4ae51a9b414a60c70b2d1ed8
 
 build:
-  number: 2
+  number: 3
   detect_binary_files_with_prefix: true
   ignore_run_exports_from:
     - {{ compiler('cxx') }}
@@ -26,15 +26,17 @@ requirements:
     - {{ stdlib("c") }}
     - {{ compiler('cxx') }}
     - gobject-introspection
-    - cairo     # [build_platform != target_platform]
-    - fribidi   # [build_platform != target_platform]
-    - glib      # [build_platform != target_platform]
-    - harfbuzz  # [build_platform != target_platform]
+    - cairo       # [build_platform != target_platform]
+    - expat       # [build_platform != target_platform]
+    - fribidi     # [build_platform != target_platform]
+    - glib        # [build_platform != target_platform]
+    - harfbuzz    # [build_platform != target_platform]
     - fontconfig  # [build_platform != target_platform]
     - freetype    # [build_platform != target_platform]
-    - libpng                 # [build_platform != target_platform]
+    - libpng      # [build_platform != target_platform]
   host:
     - cairo
+    - expat  # need to name this explicitly to get the development files
     - fribidi
     - glib
     - harfbuzz
@@ -44,6 +46,7 @@ requirements:
 
 test:
   requires:
+    - expat  # needed for the pkg-config test
     - pkg-config
     - pygobject
   commands:
@@ -51,11 +54,7 @@ test:
 
     # check that libraries are installed and can be found through pkg-config
     # (used by downstream builds)
-    {% set libs = [
-        "Pango",
-        "PangoCairo",
-        "PangoFT2",
-    ] %}
+    {% set libs = ["Pango", "PangoCairo", "PangoFT2"] %}
     {% for lib in libs %}
     - test -f $PREFIX/lib/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
     - test -f `pkg-config --variable=libdir --dont-define-prefix {{ lib | lower }}`/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
