@@ -26,3 +26,5 @@ pango:
 - '1'
 target_platform:
 - win-64
+zlib:
+- '1'
