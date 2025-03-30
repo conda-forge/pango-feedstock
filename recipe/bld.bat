@@ -27,7 +27,7 @@ set ^"MESON_OPTIONS=^
   -Dintrospection=enabled ^
   -Dfontconfig=enabled ^
   -Dfreetype=enabled ^
-  -Dgtk_doc=false ^
+  -Ddocumentation=false ^
  ^"
 
 :: configure build using meson
