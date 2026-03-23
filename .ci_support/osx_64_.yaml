@@ -1,15 +1,15 @@
 MACOSX_DEPLOYMENT_TARGET:
-- '10.13'
+- '11.0'
 MACOSX_SDK_VERSION:
-- '10.13'
+- '11.0'
 c_compiler:
 - clang
 c_compiler_version:
-- '18'
+- '19'
 c_stdlib:
 - macosx_deployment_target
 c_stdlib_version:
-- '10.13'
+- '11.0'
 cairo:
 - '1'
 channel_sources:
@@ -19,7 +19,7 @@ channel_targets:
 cxx_compiler:
 - clangxx
 cxx_compiler_version:
-- '18'
+- '19'
 expat:
 - '2'
 fontconfig:
@@ -28,8 +28,6 @@ freetype:
 - '2'
 glib:
 - '2'
-harfbuzz:
-- 11.0.1
 libpng:
 - '1.6'
 macos_machine:
