@@ -24,7 +24,6 @@ export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$BUILD_PREFIX/lib/pkgconfig
 export XDG_DATA_DIRS=${XDG_DATA_DIRS}:$PREFIX/share
 
 meson_config_args=(
-    -Dintrospection=enabled
     -Dfontconfig=enabled
     -Dfreetype=enabled
     -Dgtk_doc=false
@@ -49,6 +48,11 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
     # Unset them as we're ok with builds that are either slow or non-portable
     unset CFLAGS
     unset CPPFLAGS
+    if [[ "$target_platform" = linux-riscv64 ]]; then
+        # the riscv64 CXXFLAGS carry -march=rv64imafdc -mabi=lp64d, which the
+        # x86_64 build compiler rejects when meson probes the C++ linker
+        unset CXXFLAGS
+    fi
     export host_alias=$build_alias
     export PKG_CONFIG_PATH=$BUILD_PREFIX/lib/pkgconfig
 
@@ -57,6 +61,7 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
         "${meson_config_args[@]}" \
         --buildtype=release \
         --prefix=$BUILD_PREFIX \
+        -Dintrospection=enabled \
         -Dlibdir=lib \
         --wrap-mode=nofallback
 
@@ -66,8 +71,17 @@ if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
     export GI_CROSS_LAUNCHER=$BUILD_PREFIX/libexec/gi-cross-launcher-save.sh
     ninja -v -C native-build -j ${CPU_COUNT}
     ninja -C native-build install -j ${CPU_COUNT}
+
+    # Store generated introspection information
+    mkdir -p introspection/gir introspection/typelib
+    cp -vap $BUILD_PREFIX/lib/girepository-1.0/Pango*.typelib introspection/typelib/
+    cp -vap $BUILD_PREFIX/share/gir-1.0/Pango*.gir introspection/gir/
   )
+
   export GI_CROSS_LAUNCHER=$BUILD_PREFIX/libexec/gi-cross-launcher-load.sh
+  meson_config_args+=(-Dintrospection=disabled)
+else
+  meson_config_args+=(-Dintrospection=enabled)
 fi
 
 meson setup builddir \
@@ -76,3 +90,10 @@ meson setup builddir \
     --wrap-mode=nofallback
 ninja -v -C builddir -j ${CPU_COUNT}
 ninja -C builddir install -j ${CPU_COUNT}
+
+if [[ "$CONDA_BUILD_CROSS_COMPILATION" == "1" ]]; then
+  # Install GIR/typelib files from the native build
+  mkdir -p $PREFIX/lib/girepository-1.0 $PREFIX/share/gir-1.0
+  cp -vap introspection/typelib/* $PREFIX/lib/girepository-1.0/
+  cp -vap introspection/gir/* $PREFIX/share/gir-1.0
+fi
