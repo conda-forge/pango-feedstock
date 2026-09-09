@@ -1,4 +1,6 @@
 c_compiler:                    # [win]
-- vs2019                       # [win]
+- vs2019                       # [win and not arm64]
+- vs2022                       # [win and arm64]
 cxx_compiler:                  # [win]
-- vs2019                       # [win]
+- vs2019                       # [win and not arm64]
+- vs2022                       # [win and arm64]
