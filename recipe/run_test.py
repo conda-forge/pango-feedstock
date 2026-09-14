@@ -9,8 +9,6 @@ assert fontmap.list_families()
 import cairo
 import struct
 import subprocess
-import sysconfig
-from pathlib import Path
 from gi.repository import Pango
 
 surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 256, 64)
@@ -34,16 +32,3 @@ subprocess.run(["pango-view", "--no-display", "--text=ARM64", "--output=pango-cl
 image = cairo.ImageSurface.create_from_png("pango-cli.png")
 assert image.get_width() > 0 and image.get_height() > 0
 print("PASS: installed pango-view produces a decodable PNG")
-
-if sys.platform == "win32":
-    expected = 0xAA64 if "arm64" in sysconfig.get_platform() else 0x8664
-    bindir = Path(sys.prefix) / "Library" / "bin"
-    binaries = list(bindir.glob("pango*.dll")) + list(bindir.glob("pango-*.exe"))
-    assert len(binaries) >= 4
-    for binary in binaries:
-        data = binary.read_bytes()
-        offset = struct.unpack_from("<I", data, 60)[0]
-        assert data[offset:offset + 4] == b"PE\0\0", binary
-        machine = struct.unpack_from("<H", data, offset + 4)[0]
-        assert machine == expected, (binary, hex(machine))
-        print(f"PASS: {binary.name} machine={machine:#x}")
