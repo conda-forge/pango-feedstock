@@ -2,7 +2,7 @@
 {% set version_majmin = ".".join(version.split(".", 2)[:2]) %}
 
 package:
-  name: pango
+  name: pango-split
   version: {{ version }}
 
 source:
@@ -12,10 +12,6 @@ source:
 build:
   number: 2
   detect_binary_files_with_prefix: true
-  ignore_run_exports_from:
-    - {{ compiler('cxx') }}
-  run_exports:
-    - {{ pin_subpackage('pango', max_pin='x') }}
 
 requirements:
   build:
@@ -51,28 +47,109 @@ requirements:
     - xorg-xorgproto
     - zlib
 
-test:
-  requires:
-    - expat  # needed for the pkg-config test
-    - harfbuzz  # needed for gobject-introspection loading
-    - pkg-config
-    - pygobject
-  commands:
-    - pango-view --help
+outputs:
+  - name: libpango
+    files:
+      - lib/libpango*.so*                               # [linux]
+      - lib/libpango*.dylib                             # [osx]
+      - Library/bin/pango*.dll                          # [win]
+      - lib/girepository-1.0/Pango*.typelib             # [unix]
+      - Library/lib/girepository-1.0/Pango*.typelib     # [win]
+    build:
+      ignore_run_exports_from:
+        - {{ compiler('cxx') }}
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ stdlib("c") }}
+        - {{ compiler('cxx') }}
+      host:
+        - cairo
+        - expat
+        - fribidi
+        - glib
+        - harfbuzz
+        - fontconfig
+        - freetype
+        - libpng
+        - zlib
+    test:
+      files:
+        - run_test.py
+      requires:
+        - pygobject
+      commands:
+        {% set libs = ["Pango", "PangoCairo", "PangoFT2"] %}
+        {% for lib in libs %}
+        - test -f $PREFIX/lib/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
+        - if not exist %PREFIX%\\Library\\bin\\{{ lib | lower }}-1.0-0.dll exit 1  # [win]
+        - test -f $PREFIX/lib/girepository-1.0/{{ lib }}-1.0.typelib    # [unix]
+        - if not exist %PREFIX%\Library\lib\girepository-1.0\{{ lib }}-1.0.typelib exit 1         # [win]
+        {% endfor %}
+        - python run_test.py
 
-    # check that libraries are installed and can be found through pkg-config
-    # (used by downstream builds)
-    {% set libs = ["Pango", "PangoCairo", "PangoFT2"] %}
-    {% for lib in libs %}
-    - test -f $PREFIX/lib/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
-    - test -f `pkg-config --variable=libdir --dont-define-prefix {{ lib | lower }}`/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
-    - if not exist %PREFIX%\\Library\\bin\\{{ lib | lower }}-1.0-0.dll exit 1  # [win]
-    - for /f "usebackq tokens=*" %%a in (`pkg-config --variable=exec_prefix --dont-define-prefix {{ lib | lower }}`) do if not exist "%%a/bin/{{ lib | lower }}-1.0-0.dll" exit 1  # [win]
-    - if not exist %PREFIX%\\Library\\lib\\{{ lib | lower }}-1.0.lib exit 1  # [win]
-    - for /f "usebackq tokens=*" %%a in (`pkg-config --variable=libdir --dont-define-prefix {{ lib | lower }}`) do if not exist "%%a/{{ lib | lower }}-1.0.lib" exit 1  # [win]
-    - test -f $PREFIX/lib/girepository-1.0/{{ lib }}-1.0.typelib    # [unix]
-    - if not exist %PREFIX%\Library\lib\girepository-1.0\{{ lib }}-1.0.typelib exit 1         # [win]
-    {% endfor %}
+  - name: libpango-devel
+    files:
+      - bin/pango-*                                     # [unix]
+      - include/pango-1.0                               # [unix]
+      - lib/pkgconfig/pango*.pc                         # [unix]
+      - share/gir-1.0/Pango*.gir                        # [unix]
+      - Library/bin/pango-*.exe                         # [win]
+      - Library/include/pango-1.0                       # [win]
+      - Library/lib/pango*-1.0.lib                      # [win]
+      - Library/lib/pkgconfig/pango*.pc                 # [win]
+      - Library/share/gir-1.0/Pango*.gir                # [win]
+    build:
+      ignore_run_exports_from:
+        - {{ compiler('cxx') }}
+      run_exports:
+        - {{ pin_subpackage('libpango', max_pin='x') }}
+    requirements:
+      build:
+        - {{ compiler('c') }}
+        - {{ stdlib("c") }}
+        - {{ compiler('cxx') }}
+      host:
+        - {{ pin_subpackage('libpango', exact=True) }}
+        - cairo
+        - glib
+        - harfbuzz
+        - fontconfig
+        - freetype
+      run:
+        - {{ pin_subpackage('libpango', exact=True) }}
+        # pango's public headers and .pc files reach these, but the runtime
+        # packages libpango pulls in (libharfbuzz, libfreetype) lack them
+        - freetype
+        - libharfbuzz-devel
+    test:
+      requires:
+        - expat  # fontconfig.pc's Requires.private, which fontconfig does not provide
+        - pkg-config
+      commands:
+        - pango-view --help
+        - pkg-config --print-errors --exact-version "{{ version }}" pango pangocairo pangoft2 pangofc pangoot
+        {% for lib in libs %}
+        - test -f `pkg-config --variable=libdir --dont-define-prefix {{ lib | lower }}`/lib{{ lib | lower }}-1.0${SHLIB_EXT}  # [unix]
+        - for /f "usebackq tokens=*" %%a in (`pkg-config --variable=exec_prefix --dont-define-prefix {{ lib | lower }}`) do if not exist "%%a/bin/{{ lib | lower }}-1.0-0.dll" exit 1  # [win]
+        - if not exist %PREFIX%\\Library\\lib\\{{ lib | lower }}-1.0.lib exit 1  # [win]
+        - for /f "usebackq tokens=*" %%a in (`pkg-config --variable=libdir --dont-define-prefix {{ lib | lower }}`) do if not exist "%%a/{{ lib | lower }}-1.0.lib" exit 1  # [win]
+        {% endfor %}
+
+  # compatibility wrapper, so existing `pango` host deps keep getting the
+  # development files
+  - name: pango
+    build:
+      run_exports:
+        - {{ pin_subpackage('libpango', max_pin='x') }}
+    requirements:
+      host:
+        - {{ pin_subpackage('libpango-devel', exact=True) }}
+      run:
+        - {{ pin_subpackage('libpango-devel', exact=True) }}
+    test:
+      commands:
+        - echo "pure metapackage"
 
 about:
   home: http://www.pango.org/
@@ -94,3 +171,4 @@ extra:
     - ccordoba12
     - jakirkham
     - pkgw
+  feedstock-name: pango
