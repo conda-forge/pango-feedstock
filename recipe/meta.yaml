@@ -124,7 +124,10 @@ outputs:
         - libharfbuzz-devel
     test:
       requires:
-        - expat  # fontconfig.pc's Requires.private, which fontconfig does not provide
+        # .pc files that pango's dependencies require but do not provide
+        - expat           # fontconfig.pc
+        - xorg-xorgproto  # x11.pc and the other xorg .pc files cairo.pc pulls in
+        - zlib            # gio-2.0.pc, cairo.pc, libpng16.pc
         - pkg-config
       commands:
         - pango-view --help
