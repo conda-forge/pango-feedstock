@@ -28,8 +28,6 @@ glib:
 - '2'
 libpng:
 - '1.6'
-pango:
-- '1'
 target_platform:
 - linux-riscv64
 zip_keys:
