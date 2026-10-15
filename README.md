@@ -3,7 +3,7 @@ About pango-feedstock
 
 Feedstock license: [BSD-3-Clause](https://github.com/conda-forge/pango-feedstock/blob/main/LICENSE.txt)
 
-Home: http://www.pango.org/
+Home: https://gitlab.gnome.org/GNOME/pango
 
 Package license: LGPL-2.1-or-later
 
@@ -11,14 +11,13 @@ Summary: Text layout and rendering engine.
 
 Development: https://gitlab.gnome.org/GNOME/pango
 
-Documentation: http://www.pango.org/
+Documentation: https://docs.gtk.org/Pango/
 
 Pango is a library for laying out and rendering of text, with an emphasis
 on internationalization. Pango can be used anywhere that text layout is
 needed, though most of the work on Pango so far has been done in the
-context of the GTK+ widget toolkit. Pango forms the core of text and font
-handling for GTK+-2.x.
-
+context of the GTK widget toolkit. Pango forms the core of text and font
+handling for GTK.
 
 Current build status
 ====================
@@ -45,13 +44,6 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_aarch64</td>
-              <td>
-                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=751&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pango-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_" alt="variant">
-                </a>
-              </td>
-            </tr><tr>
               <td>linux_ppc64le</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=751&branchName=main">
@@ -63,6 +55,13 @@ Current build status
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=751&branchName=main">
                   <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pango-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_64_" alt="variant">
+                </a>
+              </td>
+            </tr><tr>
+              <td>osx_arm64</td>
+              <td>
+                <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=751&branchName=main">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/pango-feedstock?branchName=main&jobName=osx&configuration=osx%20osx_arm64_" alt="variant">
                 </a>
               </td>
             </tr>
@@ -78,6 +77,8 @@ Current release info
 
 | Name | Downloads | Version | Platforms |
 | --- | --- | --- | --- |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libpango-green.svg)](https://anaconda.org/conda-forge/libpango) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libpango.svg)](https://anaconda.org/conda-forge/libpango) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libpango.svg)](https://anaconda.org/conda-forge/libpango) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libpango.svg)](https://anaconda.org/conda-forge/libpango) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-libpango--devel-green.svg)](https://anaconda.org/conda-forge/libpango-devel) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/libpango-devel.svg)](https://anaconda.org/conda-forge/libpango-devel) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/libpango-devel.svg)](https://anaconda.org/conda-forge/libpango-devel) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/libpango-devel.svg)](https://anaconda.org/conda-forge/libpango-devel) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-pango-green.svg)](https://anaconda.org/conda-forge/pango) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/pango.svg)](https://anaconda.org/conda-forge/pango) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/pango.svg)](https://anaconda.org/conda-forge/pango) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/pango.svg)](https://anaconda.org/conda-forge/pango) |
 
 Installing pango
@@ -97,7 +98,7 @@ How to use
 <summary>With conda</summary>
 
 ```
-conda install pango
+conda install libpango libpango-devel pango
 ```
 
 </details>
@@ -106,7 +107,7 @@ conda install pango
 <summary>With mamba</summary>
 
 ```
-mamba install pango
+mamba install libpango libpango-devel pango
 ```
 
 </details>
@@ -116,9 +117,9 @@ mamba install pango
 
 ```
 # for adding to your local project
-pixi add pango
+pixi add libpango libpango-devel pango
 # for installing globally
-pixi global install pango
+pixi global install libpango libpango-devel pango
 ```
 
 </details>
@@ -126,13 +127,13 @@ pixi global install pango
 Search package versions
 -----------------------
 
-It is possible to list all of the versions of `pango` available on your platform:
+It is possible to list all of the versions of `libpango` available on your platform:
 
 <details>
 <summary>With conda</summary>
 
 ```
-conda search pango --channel conda-forge
+conda search libpango --channel conda-forge
 ```
 
 </details>
@@ -141,7 +142,7 @@ conda search pango --channel conda-forge
 <summary>With mamba</summary>
 
 ```
-mamba search pango --channel conda-forge
+mamba search libpango --channel conda-forge
 ```
 
 </details>
@@ -150,7 +151,7 @@ mamba search pango --channel conda-forge
 <summary>With pixi</summary>
 
 ```
-pixi search pango --channel conda-forge
+pixi search libpango --channel conda-forge
 ```
 
 </details>
@@ -160,13 +161,13 @@ pixi search pango --channel conda-forge
 
 ```
 # Search all versions available on your platform:
-mamba repoquery search pango --channel conda-forge
+mamba repoquery search libpango --channel conda-forge
 
-# List packages depending on `pango`:
-mamba repoquery whoneeds pango --channel conda-forge
+# List packages depending on `libpango`:
+mamba repoquery whoneeds libpango --channel conda-forge
 
-# List dependencies of `pango`:
-mamba repoquery depends pango --channel conda-forge
+# List dependencies of `libpango`:
+mamba repoquery depends libpango --channel conda-forge
 ```
 
 </details>

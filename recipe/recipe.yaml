@@ -1,0 +1,225 @@
+schema_version: 1
+
+context:
+  version: "1.58.2"
+  version_majmin: ${{ (version | split("."))[:2] | join(".") }}
+
+recipe:
+  name: pango-split
+  version: ${{ version }}
+
+source:
+  url: https://download.gnome.org/sources/pango/${{ version_majmin }}/pango-${{ version }}.tar.xz
+  sha256: 342385b6ca3b7c73455d7c80a13b7dbe4489e00bc3bd4c5bd6ed4dce421e374a
+
+build:
+  number: 3
+
+outputs:
+  - staging:
+      name: pango-build
+    build:
+      script:
+        file: ${{ "build.sh" if unix else "build.bat" }}
+    requirements:
+      build:
+        - ${{ compiler('c') }}
+        - ${{ stdlib("c") }}
+        - ${{ compiler('cxx') }}
+        - meson
+        - ninja
+        - pkg-config
+        - gobject-introspection
+        # build.sh does a native build to generate the introspection data
+        - if: build_platform != target_platform
+          then:
+            - cairo
+            - expat
+            - fribidi
+            - glib
+            - libharfbuzz-devel
+            - fontconfig
+            - freetype
+            - libpng
+            - xorg-xorgproto
+            - zlib
+      host:
+        - cairo
+        - fribidi
+        - glib
+        - libharfbuzz-devel
+        - fontconfig
+        - freetype
+        # Not linked; only here because the .pc files of the libraries above
+        # require them (fontconfig.pc, cairo.pc, gio-2.0.pc, libpng16.pc, x11.pc)
+        - expat
+        - libpng
+        - xorg-xorgproto
+        - zlib
+
+  - package:
+      name: libpango
+    inherit: pango-build
+    build:
+      files:
+        - if: unix
+          then:
+            - lib/libpango*.so*
+            - lib/libpango*.dylib
+            - lib/girepository-1.0/Pango*.typelib
+        - if: win
+          then:
+            - Library/bin/pango*.dll
+            - Library/lib/girepository-1.0/Pango*.typelib
+      dynamic_linking:
+        overlinking_behavior: error
+        overdepending_behavior: error
+    requirements:
+      # the sysroot has to be in this output's build env for the linking check
+      build:
+        - ${{ stdlib("c") }}
+      ignore_run_exports:
+        from_package:
+          - ${{ compiler('cxx') }}
+          - expat
+          - libpng
+          - zlib
+    tests:
+      - script:
+          interpreter: python
+          content: |
+            import gi
+            gi.require_version("PangoCairo", "1.0")
+            from gi.repository import PangoCairo
+
+            families = PangoCairo.FontMap.get_default().list_families()
+            assert families, "no font families found"
+        requirements:
+          run:
+            - pygobject
+      - package_contents:
+          strict: true
+          files:
+            - if: linux
+              then: lib/libpango*-1.0.so*
+            - if: osx
+              then: lib/libpango*-1.0.*dylib
+            - if: unix
+              then: lib/girepository-1.0/Pango*-1.0.typelib
+            - if: win
+              then:
+                - Library/bin/pango-1.0-0.dll
+                - Library/bin/pangocairo-1.0-0.dll
+                - Library/bin/pangoft2-1.0-0.dll
+                - Library/bin/pangowin32-1.0-0.dll
+                - Library/lib/girepository-1.0/Pango*-1.0.typelib
+
+  - package:
+      name: libpango-devel
+    inherit: pango-build
+    build:
+      files:
+        - if: unix
+          then:
+            - bin/pango-*
+            - include/pango-1.0/
+            - lib/pkgconfig/pango*.pc
+            - share/gir-1.0/Pango*.gir
+        - if: win
+          then:
+            - Library/bin/pango-*.exe
+            - Library/include/pango-1.0/
+            - Library/lib/pango*-1.0.lib
+            - Library/lib/pkgconfig/pango*.pc
+            - Library/share/gir-1.0/Pango*.gir
+      dynamic_linking:
+        overlinking_behavior: error
+    requirements:
+      build:
+        - ${{ stdlib("c") }}
+      host:
+        - ${{ pin_subpackage('libpango', exact=True) }}
+      run:
+        - ${{ pin_subpackage('libpango', exact=True) }}
+        # pango's public headers and .pc files reach these, but the runtime
+        # packages libpango pulls in (libharfbuzz, libfreetype) lack them
+        - freetype
+        - libharfbuzz-devel
+      run_exports:
+        - ${{ pin_subpackage('libpango', upper_bound='x') }}
+      ignore_run_exports:
+        from_package:
+          - ${{ compiler('cxx') }}
+          - expat
+          - libpng
+          - zlib
+    tests:
+      - script:
+          # renders through cairo, fontconfig, freetype and harfbuzz
+          - pango-view --no-display --text "Hello, World" --output hello.png
+          - if: unix
+            then: test -s hello.png
+            else: if not exist hello.png exit 1
+          - pkg-config --print-errors --exact-version "${{ version }}" pango pangocairo pangoft2 pangofc pangoot
+        requirements:
+          run:
+            - pkg-config
+            # .pc files that pango's dependencies require but do not provide
+            - expat           # fontconfig.pc
+            - xorg-xorgproto  # x11.pc and the other xorg .pc files cairo.pc pulls in
+            - zlib            # gio-2.0.pc, cairo.pc, libpng16.pc
+      - package_contents:
+          strict: true
+          include:
+            - pango-1.0/pango/pango.h
+          bin:
+            - pango-list
+            - pango-segmentation
+            - pango-view
+          files:
+            - if: unix
+              then:
+                - include/pango-1.0/pango/*.h
+                - lib/pkgconfig/pango*.pc
+                - share/gir-1.0/Pango*-1.0.gir
+            - if: win
+              then:
+                - Library/include/pango-1.0/pango/*.h
+                - Library/lib/pango*-1.0.lib
+                - Library/lib/pkgconfig/pango*.pc
+                - Library/share/gir-1.0/Pango*-1.0.gir
+
+  # compatibility wrapper, so existing `pango` host deps keep getting the
+  # development files
+  - package:
+      name: pango
+    requirements:
+      run:
+        - ${{ pin_subpackage('libpango-devel', exact=True) }}
+      run_exports:
+        - ${{ pin_subpackage('libpango', upper_bound='x') }}
+    tests:
+      - package_contents:
+          strict: true
+
+about:
+  license: LGPL-2.1-or-later
+  license_file: COPYING
+  summary: Text layout and rendering engine.
+  description: |
+    Pango is a library for laying out and rendering of text, with an emphasis
+    on internationalization. Pango can be used anywhere that text layout is
+    needed, though most of the work on Pango so far has been done in the
+    context of the GTK widget toolkit. Pango forms the core of text and font
+    handling for GTK.
+  homepage: https://gitlab.gnome.org/GNOME/pango
+  repository: https://gitlab.gnome.org/GNOME/pango
+  documentation: https://docs.gtk.org/Pango/
+
+extra:
+  feedstock-name: pango
+  recipe-maintainers:
+    - ocefpaf
+    - ccordoba12
+    - jakirkham
+    - pkgw
